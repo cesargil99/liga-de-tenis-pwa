@@ -8,7 +8,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-image: url('https://i.imgur.com/w3Qv7nS.jpg');
+            background-image: url('https://i.imgur.com/QN8c5h4.jpeg');
             background-size: cover;
             background-position: center;
             margin: 0;
@@ -51,10 +51,8 @@
         <h1>Únete a la Liga de Tenis</h1>
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" placeholder="Tu nombre">
-
         <label for="correo">Correo electrónico:</label>
         <input type="email" id="correo" placeholder="tucorreo@email.com">
-
         <label for="categoria">Categoría:</label>
         <select id="categoria">
             <option>Afiliado</option>
@@ -62,26 +60,20 @@
             <option>Monitor</option>
             <option>Voleador</option>
         </select>
-
         <label for="foto">Foto de perfil (opcional):</label>
         <input type="file" id="foto" accept="image/*">
-
         <button onclick="registrarJugador()">Unirse</button>
     </div>
-
     <script>
         function registrarJugador() {
             const nombre = document.getElementById('nombre').value;
             const correo = document.getElementById('correo').value;
             const categoria = document.getElementById('categoria').value;
-
             if (!nombre || !correo) {
                 alert('Por favor completa todos los campos obligatorios.');
                 return;
             }
-
             alert('¡Registro exitoso! Bienvenido a la Liga, ' + nombre);
-            // Aquí se guardaría el jugador en localStorage o base de datos
         }
     </script>
 </body>
