@@ -1,18 +1,126 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="theme-color" content="#000000"/>
-    <link rel="manifest" href="manifest.json"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ranking Dobles - Liga de Tenis</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        .formulario, .ranking {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input, select, button {
+            display: block;
+            margin: 10px 0;
+            width: 100%;
+            padding: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <h1>Ranking Dobles - Liga de Tenis</h1>
-    <div id="app">
-        <p>Bienvenido César Gil 😎🎾</p>
-        <ul id="ranking"></ul>
+    <h1>Ranking Dobles</h1>
+    <h2>Liga de Tenis</h2>
+
+    <div class="formulario">
+        <h3>Registrar Partido</h3>
+        <label>Jugador 1:</label>
+        <input id="jugador1" type="text">
+        <label>Categoría Jugador 1:</label>
+        <select id="cat1">
+            <option>Afiliado</option>
+            <option>Profesor</option>
+        </select>
+
+        <label>Jugador 2:</label>
+        <input id="jugador2" type="text">
+        <label>Categoría Jugador 2:</label>
+        <select id="cat2">
+            <option>Afiliado</option>
+            <option>Profesor</option>
+        </select>
+
+        <label>Resultado:</label>
+        <input id="resultado" type="text" placeholder="Ej: 6-4, 6-3">
+
+        <button onclick="registrarPartido()">Registrar</button>
     </div>
-    <script src="app.js"></script>
+
+    <div class="ranking">
+        <h3>Ranking Actual</h3>
+        <table id="tablaRanking">
+            <thead>
+                <tr><th>Jugador</th><th>Categoría</th><th>Puntos</th></tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        let jugadores = JSON.parse(localStorage.getItem("jugadores") || "[]");
+
+        function calcularPuntos(categoria) {
+            return categoria === "Afiliado" ? 1000 : 500;
+        }
+
+        function registrarPartido() {
+            const j1 = document.getElementById("jugador1").value.trim();
+            const c1 = document.getElementById("cat1").value;
+            const j2 = document.getElementById("jugador2").value.trim();
+            const c2 = document.getElementById("cat2").value;
+
+            if (!j1 || !j2) {
+                alert("Por favor ingresa ambos jugadores.");
+                return;
+            }
+
+            let jugadoresMap = {};
+            jugadores.forEach(j => jugadoresMap[j.nombre] = j);
+
+            [ [j1, c1], [j2, c2] ].forEach(([nombre, cat]) => {
+                if (!jugadoresMap[nombre]) {
+                    jugadoresMap[nombre] = { nombre, categoria: cat, puntos: 0 };
+                }
+                jugadoresMap[nombre].puntos += calcularPuntos(cat);
+            });
+
+            jugadores = Object.values(jugadoresMap);
+            localStorage.setItem("jugadores", JSON.stringify(jugadores));
+            mostrarRanking();
+        }
+
+        function mostrarRanking() {
+            const tbody = document.querySelector("#tablaRanking tbody");
+            tbody.innerHTML = "";
+            jugadores.sort((a, b) => b.puntos - a.puntos);
+            jugadores.forEach(j => {
+                const fila = `<tr><td>${j.nombre}</td><td>${j.categoria}</td><td>${j.puntos}</td></tr>`;
+                tbody.innerHTML += fila;
+            });
+        }
+
+        mostrarRanking();
+    </script>
 </body>
 </html>
