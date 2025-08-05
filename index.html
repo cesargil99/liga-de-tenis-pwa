@@ -3,124 +3,86 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <title>Unirse a la Liga de Tenis</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ranking Dobles - Liga de Tenis</title>
-    <link rel="manifest" href="manifest.json">
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-image: url('https://i.imgur.com/w3Qv7nS.jpg');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            background-color: rgba(255,255,255,0.9);
+            max-width: 400px;
+            margin: 50px auto;
             padding: 20px;
+            border-radius: 8px;
         }
-        h1, h2 {
+        h1 {
             text-align: center;
+            color: #333;
         }
-        .formulario, .ranking {
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        input, select, button {
+        label, input, select {
             display: block;
-            margin: 10px 0;
             width: 100%;
-            padding: 8px;
+            margin-bottom: 10px;
         }
-        table {
+        button {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
+            padding: 10px;
+            background-color: #1c87c9;
+            color: white;
+            border: none;
+            border-radius: 4px;
         }
-        th, td {
-            border: 1px solid #aaa;
-            padding: 8px;
-            text-align: center;
+        img {
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
 <body>
-    <h1>Ranking Dobles</h1>
-    <h2>Liga de Tenis</h2>
+    <div class="container">
+        <img src="https://i.imgur.com/03UjMxp.jpg" alt="Federer">
+        <h1>Únete a la Liga de Tenis</h1>
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" placeholder="Tu nombre">
 
-    <div class="formulario">
-        <h3>Registrar Partido</h3>
-        <label>Jugador 1:</label>
-        <input id="jugador1" type="text">
-        <label>Categoría Jugador 1:</label>
-        <select id="cat1">
+        <label for="correo">Correo electrónico:</label>
+        <input type="email" id="correo" placeholder="tucorreo@email.com">
+
+        <label for="categoria">Categoría:</label>
+        <select id="categoria">
             <option>Afiliado</option>
             <option>Profesor</option>
+            <option>Monitor</option>
+            <option>Voleador</option>
         </select>
 
-        <label>Jugador 2:</label>
-        <input id="jugador2" type="text">
-        <label>Categoría Jugador 2:</label>
-        <select id="cat2">
-            <option>Afiliado</option>
-            <option>Profesor</option>
-        </select>
+        <label for="foto">Foto de perfil (opcional):</label>
+        <input type="file" id="foto" accept="image/*">
 
-        <label>Resultado:</label>
-        <input id="resultado" type="text" placeholder="Ej: 6-4, 6-3">
-
-        <button onclick="registrarPartido()">Registrar</button>
-    </div>
-
-    <div class="ranking">
-        <h3>Ranking Actual</h3>
-        <table id="tablaRanking">
-            <thead>
-                <tr><th>Jugador</th><th>Categoría</th><th>Puntos</th></tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <button onclick="registrarJugador()">Unirse</button>
     </div>
 
     <script>
-        let jugadores = JSON.parse(localStorage.getItem("jugadores") || "[]");
+        function registrarJugador() {
+            const nombre = document.getElementById('nombre').value;
+            const correo = document.getElementById('correo').value;
+            const categoria = document.getElementById('categoria').value;
 
-        function calcularPuntos(categoria) {
-            return categoria === "Afiliado" ? 1000 : 500;
-        }
-
-        function registrarPartido() {
-            const j1 = document.getElementById("jugador1").value.trim();
-            const c1 = document.getElementById("cat1").value;
-            const j2 = document.getElementById("jugador2").value.trim();
-            const c2 = document.getElementById("cat2").value;
-
-            if (!j1 || !j2) {
-                alert("Por favor ingresa ambos jugadores.");
+            if (!nombre || !correo) {
+                alert('Por favor completa todos los campos obligatorios.');
                 return;
             }
 
-            let jugadoresMap = {};
-            jugadores.forEach(j => jugadoresMap[j.nombre] = j);
-
-            [ [j1, c1], [j2, c2] ].forEach(([nombre, cat]) => {
-                if (!jugadoresMap[nombre]) {
-                    jugadoresMap[nombre] = { nombre, categoria: cat, puntos: 0 };
-                }
-                jugadoresMap[nombre].puntos += calcularPuntos(cat);
-            });
-
-            jugadores = Object.values(jugadoresMap);
-            localStorage.setItem("jugadores", JSON.stringify(jugadores));
-            mostrarRanking();
+            alert('¡Registro exitoso! Bienvenido a la Liga, ' + nombre);
+            // Aquí se guardaría el jugador en localStorage o base de datos
         }
-
-        function mostrarRanking() {
-            const tbody = document.querySelector("#tablaRanking tbody");
-            tbody.innerHTML = "";
-            jugadores.sort((a, b) => b.puntos - a.puntos);
-            jugadores.forEach(j => {
-                const fila = `<tr><td>${j.nombre}</td><td>${j.categoria}</td><td>${j.puntos}</td></tr>`;
-                tbody.innerHTML += fila;
-            });
-        }
-
-        mostrarRanking();
     </script>
 </body>
 </html>
